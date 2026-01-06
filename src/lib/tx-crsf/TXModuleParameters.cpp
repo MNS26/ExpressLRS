@@ -103,6 +103,17 @@ static selectionParameter luaTlmRate = {
     tlmBandwidth
 };
 
+static int8Parameter luaVehicleId = {
+  {"Tlm MAVLink SysID", CRSF_UINT8},
+  { 
+    {
+      (uint8_t)1,       // value - default to 1
+      (uint8_t)0,       // min (technically 0 can't be a vehicle ID but here its used as a wildcard to let everything through)
+      (uint8_t)254,     // max
+    }
+  },
+  STR_EMPTYSPACE
+};
 //----------------------------POWER------------------
 static folderParameter luaPowerFolder = {
     {"TX Power", CRSF_FOLDER},pwrFolderDynamicName
@@ -885,6 +896,9 @@ void TXModuleEndpoint::registerParameters()
         setWarningFlag(LUA_FLAG_ERROR_CONNECTED, true);
       }
     });
+    registerParameter(&luaVehicleId,[this](propertiesCommon *item, uint8_t arg) {
+      config.SetTelemetryVehicleId(arg);
+    });
     if (!firmwareOptions.is_airport)
     {
       registerParameter(&luaModelMatch, [this](propertiesCommon *item, uint8_t arg) {
@@ -1052,10 +1066,13 @@ void TXModuleEndpoint::updateParameters()
   if (isMavlinkMode)
   {
     luaSwitch.options = OtaIsFullRes ? switchmodeOpts8chMav : switchmodeOpts4chMav;
+    setUint8Value(&luaVehicleId, config.GetTelemetryVehivcleId());
+    LUA_FIELD_SHOW(luaVehicleId);
   }
   else
   {
     luaSwitch.options = OtaIsFullRes ? switchmodeOpts8ch : switchmodeOpts4ch;
+    LUA_FIELD_HIDE(luaVehicleId);
   }
 
   if (isDualRadio())
