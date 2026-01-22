@@ -34,6 +34,7 @@ private:
     const uint8_t target_component_id;
 
     uint32_t lastSentFlowCtrl = 0;
+    bool wasLastPacket = 0;
 
     // Variables / constants for Mavlink //
     FIFO<MAV_INPUT_BUF_LEN> mavlinkInputBuffer;

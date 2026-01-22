@@ -150,12 +150,29 @@ bool SerialMavlink::GetNextPayload(uint8_t* nextPayloadSize, uint8_t *payloadDat
     {
         return false;
     }
+//    // check if size of the mavlink magic marker packet
+//    if (wasLastPacket && mavlinkInputBuffer.operator[](0) == 0xFD) 
+//    {
+//        // early return in case its not our target ID
+//        if ((mavlinkInputBuffer.operator[](5) != config.GetTargetSysId()))
+//        {
+//            mavlinkInputBuffer.skip(mavlinkInputBuffer.operator[](1)+1);
+//            return false;
+//        }
+//        wasLastPacket = false;
+//    }
+
     const uint16_t count = std::min(mavlinkInputBuffer.size(), (uint16_t)CRSF_PAYLOAD_SIZE_MAX); // Constrain to CRSF max payload size to match SS
     payloadData[0] = CRSF_ADDRESS_USB; // device_addr - used on TX to differentiate between std tlm and mavlink
     payloadData[1] = count;
     // The following 'n' bytes are just raw mavlink
     mavlinkInputBuffer.popBytes(payloadData + CRSF_FRAME_NOT_COUNTED_BYTES, count);
     *nextPayloadSize = count + CRSF_FRAME_NOT_COUNTED_BYTES;
+
+//    if (*nextPayloadSize <= CRSF_PAYLOAD_SIZE_MAX) // rest of the packet will fit in only 1 more transmit
+//    {
+//        wasLastPacket = true;
+//    }
     return true;
 }
 

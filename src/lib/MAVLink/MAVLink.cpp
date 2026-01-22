@@ -79,7 +79,7 @@ static void ap_send_crsf_passthrough_multi(crsf_addr_e destination, uint16_t app
     crsfRouter.deliverMessageTo(destination, &crsfpassthrough.h);
 }
 
-void convert_mavlink_to_crsf_telem(crsf_addr_e destination, uint8_t targetVehicleId, uint8_t *CRSFinBuffer, uint8_t count)
+void convert_mavlink_to_crsf_telem(crsf_addr_e destination, uint8_t *CRSFinBuffer, uint8_t count)
 {
     // Store the relative altitude for GPS altitude
     static int32_t relative_alt_mm = 0;
@@ -100,13 +100,7 @@ void convert_mavlink_to_crsf_telem(crsf_addr_e destination, uint8_t targetVehicl
         if (have_message)
         {
             // Only parse heartbeats from the autopilot (not GCS)
-            if (msg.compid != MAV_COMP_ID_AUTOPILOT1)
-            {
-                continue;
-            }
-            // only parse messages from a specific vehicle (mavlink can have multiple vehicles each passing MAV_COMP_ID_AUTOPILOT1 check)
-            // if target ID is 0 just parse it as telemetry
-            if (msg.sysid != targetVehicleId && targetVehicleId != 0)
+            if ((msg.compid != MAV_COMP_ID_AUTOPILOT1) || (msg.sysid != 1))
             {
                 continue;
             }

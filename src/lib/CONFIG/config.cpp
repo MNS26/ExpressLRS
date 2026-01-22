@@ -768,15 +768,6 @@ TxConfig::SetDefaults(bool commit)
     m_modified = 0;
 }
 
-void
-TxConfig::SetTelemetryVehicleId(uint8_t vehicleId)
-{
-    if (m_config.vehicleId != vehicleId) {
-        m_config.vehicleId = vehicleId;
-        m_modified |= EVENT_CONFIG_MAIN_CHANGED;
-    }
-}
-
 /**
  * Sets ModelId used for subsequent per-model config gets
  * Returns: true if the model has changed

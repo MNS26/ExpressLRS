@@ -112,7 +112,6 @@ typedef struct {
     tx_button_color_t buttonColors[2];  // FUTURE: TX RGB color / mode (sets color of TX, can be a static color or standard)
                                         // FUTURE: Model RGB color / mode (sets LED color mode on the model, but can be second TX led color too)
                                         // FUTURE: Custom button actions
-    uint8_t         vehicleId;   // used when in mavlink mode, (mulitple vehicle have the same component id, we also need to check vehicle ID)
 } tx_config_t;
 
 class TxConfig
@@ -149,7 +148,6 @@ public:
     model_config_t const &GetModelConfig(uint8_t model) const { return m_config.model_config[model]; }
     uint8_t GetPTRStartChannel() const { return m_model->ptrStartChannel; }
     uint8_t GetPTREnableChannel() const { return m_model->ptrEnableChannel; }
-    uint8_t GetTelemetryVehivcleId() const {return m_config.vehicleId;}
 
     // Setters
     void SetRate(uint8_t rate);
@@ -178,7 +176,6 @@ public:
     void SetBackpackTlmMode(uint8_t mode);
     void SetPTRStartChannel(uint8_t ptrStartChannel);
     void SetPTREnableChannel(uint8_t ptrEnableChannel);
-    void SetTelemetryVehicleId(uint8_t vehicleId);
 
     // State setters
     bool SetModelId(uint8_t modelId);
